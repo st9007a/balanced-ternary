@@ -3,9 +3,6 @@
 
 #include "ternary.h"
 
-#define T_FALSE 2
-#define T_UNKNOWN 3
-#define T_TRUE 1
 
 static int t2b[3] = { 1, -1, 0 };
 
@@ -32,18 +29,23 @@ short toBinary(t_int6 *tint)
     return sum;
 }
 
-/* inline void AND(trit *a, trit *b, trit *out) { */
-/*     out->val = (a->val & b->val & 1) | (a->val | b->val & 2); */
-/* } */
-/* inline void OR(trit *a, trit *b, trit *out) { */
-/*     out->val = (a->val | b->val & 1) | (a->val & b->val & 2); */
-/* } */
-/* inline void DECODE_FALSE(trit *num, trit *out) { */
-/*     out->val = num->val << 1 | ~(num->val & 1); */
-/* } */
-/* inline void DECODE_TRUE(trit *num, trit *out) { */
-/*     out->val = num->val & 2 | ~(num->val >> 1); */
-/* } */
-/* inline void DECODE_UNKNOWN(trit *num, trit *out) { */
-/*     out->val = num->val & num->val >> 1 | (~(num->val & num->val >> 1)) << 1; */
-/* } */
+inline void AND(trit *a, trit *b, trit *out)
+{
+    out->val = (a->val & b->val & 1) | ((a->val | b->val) & 2);
+}
+inline void OR(trit *a, trit *b, trit *out)
+{
+    out->val = ((a->val | b->val) & 1) | (a->val & b->val & 2);
+}
+inline void DECODE_FALSE(trit *num, trit *out)
+{
+    out->val = (num->val << 1) | (~num->val & 1);
+}
+inline void DECODE_TRUE(trit *num, trit *out)
+{
+    out->val = (num->val & 2) | ((~num->val & 2) >> 1);
+}
+inline void DECODE_UNKNOWN(trit *num, trit *out)
+{
+    out->val = (~(num->val & ((num->val >> 1) & 1)) << 1) | (num->val & ((num->val >> 1) & 1));
+}
