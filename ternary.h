@@ -17,6 +17,7 @@ t_int6 *getTernaryInt(int num);
 short toBinary(t_int6 *tint);
 void AND(trit *a, trit *b, trit *out);
 void OR(trit *a, trit *b, trit *out);
+void NOT(trit *num, trit *out);
 void DECODE_FALSE(trit *num, trit *out);
 void DECODE_TRUE(trit *num, trit *out);
 void DECODE_UNKNOWN(trit *num, trit *out);

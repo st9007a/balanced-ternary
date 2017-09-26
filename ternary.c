@@ -37,6 +37,10 @@ inline void OR(trit *a, trit *b, trit *out)
 {
     out->val = ((a->val | b->val) & 1) | (a->val & b->val & 2);
 }
+inline void NOT(trit *num, trit *out)
+{
+    out->val = (~num->val | num->val >> 1) | (num->val | ~num->val >> 1) << 1;
+}
 inline void DECODE_FALSE(trit *num, trit *out)
 {
     out->val = (num->val << 1) | (~num->val & 1);
