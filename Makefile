@@ -1,4 +1,6 @@
 EXEC = b3k
+TEST = ternary
+SRC_TEST = test.c
 
 CC ?= gcc
 CFLAGS = -Wall -std=gnu99 -g
@@ -17,6 +19,9 @@ deps := $(OBJS:%.o=.%.o.d)
 
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(TEST): $(SRC_TEST) ternary.c ternary.h
+	$(CC) $(CFLAGS) -o $@ $(SRC_TEST) $@.c
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ -MMD -MF .$@.d $<
