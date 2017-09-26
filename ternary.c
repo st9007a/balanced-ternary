@@ -29,27 +29,34 @@ short toBinary(t_int6 *tint)
     return sum;
 }
 
-inline void AND(trit *a, trit *b, trit *out)
+inline u_int16 AND(u_int16 a, u_int16 b)
 {
-    out->val = (a->val & b->val & 1) | ((a->val | b->val) & 2);
+    return (a & b & 1) | ((a | b) & 2);
 }
-inline void OR(trit *a, trit *b, trit *out)
+inline u_int16 OR(u_int16 a, u_int16 b)
 {
-    out->val = ((a->val | b->val) & 1) | (a->val & b->val & 2);
+    return ((a | b) & 1) | (a & b & 2);
 }
-inline void NOT(trit *num, trit *out)
+inline u_int16 NOT(u_int16 num)
 {
-    out->val = (~num->val | num->val >> 1) | (num->val | ~num->val >> 1) << 1;
+    return (~num | num >> 1) | (num | ~num >> 1) << 1;
 }
-inline void DECODE_FALSE(trit *num, trit *out)
+inline u_int16 DECODE_FALSE(u_int16 num)
 {
-    out->val = (num->val << 1) | (~num->val & 1);
+    return (num << 1) | (~num & 1);
 }
-inline void DECODE_TRUE(trit *num, trit *out)
+inline u_int16 DECODE_TRUE(u_int16 num)
 {
-    out->val = (num->val & 2) | ((~num->val & 2) >> 1);
+    return (num & 2) | ((~num & 2) >> 1);
 }
-inline void DECODE_UNKNOWN(trit *num, trit *out)
+inline u_int16 DECODE_UNKNOWN(u_int16 num)
 {
-    out->val = (~(num->val & ((num->val >> 1) & 1)) << 1) | (num->val & ((num->val >> 1) & 1));
+    return (~(num & ((num >> 1) & 1)) << 1) | (num & ((num >> 1) & 1));
+}
+u_int16 MUX(u_int16 inN, u_int16 inO, u_int16 inP, u_int16 sel)
+{
+    u_int16 f = AND(inN, DECODE_FALSE(sel));
+    u_int16 u = AND(inO, DECODE_UNKNOWN(sel));
+    u_int16 t = AND(inP, DECODE_TRUE(sel));
+    return OR(f, OR(u, t));
 }
