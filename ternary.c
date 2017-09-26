@@ -134,6 +134,7 @@ t_int6 *getTernaryInt(int num)
         num = ~~(num / 3);
     } while(num);
 
+    tnum-> val |= 255 << step;
     return tnum;
 }
 
