@@ -5,27 +5,26 @@
 #define T_UNKNOWN 3
 #define T_TRUE 1
 
+#include <stdint.h>
+
 typedef struct __TERNARY_INT {
-    unsigned short val:12;
-} t_int6;
+    uint16_t val:12;
+} tint6;
 
-typedef unsigned short u_int16;
+uint16_t AND(uint16_t a,uint16_t b);
+uint16_t OR(uint16_t a, uint16_t b);
+uint16_t NOT(uint16_t num);
+uint16_t DECODE_FALSE(uint16_t num);
+uint16_t DECODE_TRUE(uint16_t num);
+uint16_t DECODE_UNKNOWN(uint16_t num);
 
+uint16_t multiplexer(uint16_t inN, uint16_t inO, uint16_t inP, uint16_t sel);
+uint16_t halfAdder(uint16_t a, uint16_t b);
+uint16_t consensus(uint16_t a, uint16_t b);
+uint16_t fullAdder(uint16_t a, uint16_t b, uint16_t cin);
+uint16_t checkOverflow(uint16_t a, uint16_t b, uint16_t cin);
 
-u_int16 AND(u_int16 a,u_int16 b);
-u_int16 OR(u_int16 a, u_int16 b);
-u_int16 NOT(u_int16 num);
-u_int16 DECODE_FALSE(u_int16 num);
-u_int16 DECODE_TRUE(u_int16 num);
-u_int16 DECODE_UNKNOWN(u_int16 num);
-
-u_int16 multiplexer(u_int16 inN, u_int16 inO, u_int16 inP, u_int16 sel);
-u_int16 halfAdder(u_int16 a, u_int16 b);
-u_int16 consensus(u_int16 a, u_int16 b);
-u_int16 fullAdder(u_int16 a, u_int16 b, u_int16 cin);
-u_int16 checkOverflow(u_int16 a, u_int16 b, u_int16 cin);
-
-t_int6 *getTernaryInt(int num);
-short toBinary(t_int6 *tint);
-t_int6 *sum(t_int6 *a, t_int6 *b, t_int6 *carry);
+tint6 *getTernaryInt(int num);
+short toBinary(tint6 *tint);
+tint6 *sum(tint6 *a, tint6 *b, tint6 *carry);
 #endif
