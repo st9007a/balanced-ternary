@@ -28,24 +28,20 @@ START_TEST(test_tint6_out_of_lower_bound)
 }
 END_TEST
 
-START_TEST(test_tint6_sum_without_carry)
+START_TEST(test_tint6_sum)
 {
-    tint6 *a = getTernaryInt(-1);
-    tint6 *b = getTernaryInt(-2);
-    tint6 carry;
-    ck_assert_int_eq(toBinary(sum(a, b, &carry)), -3);
-    ck_assert_int_eq(toBinary(&carry), 0);
-}
-END_TEST
-
-START_TEST(test_tint6_sum_with_carry)
-{
-    tint6 *a = getTernaryInt(1);
-    tint6 *b = getTernaryInt(364);
+    tint6 *a;
+    tint6 *b;
     tint6 carry;
 
-    int total = toBinary(sum(a, b, &carry)) + toBinary(&carry) * 729;
-    ck_assert_int_eq(total, 365);
+    for (int i = -364; i <= 364; i++) {
+        a = getTernaryInt(i);
+        for (int j = -364; j <= 364; j++) {
+            b = getTernaryInt(j);
+            int total = toBinary(sum(a, b, &carry)) + toBinary(&carry) * 729;
+            ck_assert_int_eq(total, i + j);
+        }
+    }
 }
 END_TEST
 
@@ -60,8 +56,7 @@ Suite *ternarySuite()
     tcase_add_test(tCore, test_tint6_eq);
     tcase_add_test(tCore, test_tint6_out_of_upper_bound);
     tcase_add_test(tCore, test_tint6_out_of_lower_bound);
-    tcase_add_test(tCore, test_tint6_sum_without_carry);
-    tcase_add_test(tCore, test_tint6_sum_with_carry);
+    tcase_add_test(tCore, test_tint6_sum);
 
     suite_add_tcase(s, tCore);
     return s;
