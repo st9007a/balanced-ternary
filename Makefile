@@ -1,6 +1,7 @@
 EXEC = b3k
 TEST = ternary
 SRC_TEST = test.c
+UNIT_TEST = unit_test
 
 CC ?= gcc
 CFLAGS = -Wall -std=gnu99 -g
@@ -26,6 +27,14 @@ $(TEST): $(SRC_TEST) ternary.c ternary.h
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ -MMD -MF .$@.d $<
 
+$(UNIT_TEST): ./tests/check_ternary.c ternary.c
+	@$(CC) ./tests/check_ternary.c ternary.c \
+		`pkg-config --cflags --libs check` \
+		-o $(UNIT_TEST)
+
+test: $(UNIT_TEST)
+	@./$<
+
 check: $(EXEC)
 	echo  27 | ./$^
 	echo -27 | ./$^
@@ -33,6 +42,6 @@ check: $(EXEC)
 	echo  -9 | ./$^
 
 clean:
-	$(RM) $(EXEC) $(OBJS) $(deps)
+	$(RM) $(EXEC) $(OBJS) $(deps) $(UINT_TEST)
 
 -include $(deps)
