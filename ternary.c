@@ -3,31 +3,40 @@
 
 #include "ternary.h"
 
+#define clip(x) x &= 3
 
 static int t2b[3] = { 1, -1, 0 };
 
 inline uint16_t AND(uint16_t a, uint16_t b)
 {
+    clip(a);
+    clip(b);
     return (a & b & 1) | ((a | b) & 2);
 }
 inline uint16_t OR(uint16_t a, uint16_t b)
 {
+    clip(a);
+    clip(b);
     return ((a | b) & 1) | (a & b & 2);
 }
 inline uint16_t NOT(uint16_t num)
 {
-    return ((~num & 3) | num >> 1) | (num | (~num & 3)>> 1) << 1;
+    clip(num);
+    return (~num | num >> 1) | (num | ~num >> 1) << 1;
 }
 inline uint16_t DECODE_FALSE(uint16_t num)
 {
+    clip(num);
     return (num << 1) | (~num & 1);
 }
 inline uint16_t DECODE_TRUE(uint16_t num)
 {
+    clip(num);
     return (num & 2) | ((~num & 2) >> 1);
 }
 inline uint16_t DECODE_UNKNOWN(uint16_t num)
 {
+    clip(num);
     return (~(num & ((num >> 1) & 1)) << 1) | (num & ((num >> 1) & 1));
 }
 
@@ -79,10 +88,11 @@ tint6 *sum(tint6 *a, tint6 *b, tint6 *carry)
     sum->val = 0;
 
     for (int i = 0; i < 12; i += 2) {
-        uint16_t tritA = (a->val & (3 << i)) >> i;
-        uint16_t tritB = (b->val & (3 << i)) >> i;
+        uint16_t tritA = (a->val >> i) & 3;
+        uint16_t tritB = (b->val >> i) & 3;
         sum->val |= fullAdder(tritA, tritB, carry->val) << i;
         carry->val = checkOverflow(tritA, tritB, carry->val);
+        clip(carry->val);
     }
 
     return sum;
@@ -134,7 +144,7 @@ tint6 *getTernaryInt(int num)
         num = ~~(num / 3);
     } while(num);
 
-    tnum-> val |= 255 << step;
+    tnum-> val |= 4095 << step;
     return tnum;
 }
 
